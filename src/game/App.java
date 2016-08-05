@@ -87,6 +87,7 @@ public class App {
 						
 						// if number of sides > 0 randomise that number
 						if (Maze[new_row][new_col].getNum_sides() > 0) {
+							Allocation allocated_side = null;
 							Random rand = new Random();
 							int pathway = rand.nextInt(Maze[new_row][new_col].getNum_sides());
 							
@@ -94,6 +95,7 @@ public class App {
 							for (int sides = 4; sides > 0; sides--) {
 								if (Maze[new_row][new_col].getN_side() == Side.UNASSIGNED && pathway == 0) {
 									Maze[new_row][new_col].setN_side(Side.OPEN);
+									allocated_side = Allocation.NORTH;
 									break;
 								}
 								else if (Maze[new_row][new_col].getN_side() == Side.UNASSIGNED){
@@ -103,6 +105,7 @@ public class App {
 								
 								if (Maze[new_row][new_col].getE_side() == Side.UNASSIGNED && pathway == 0) {
 									Maze[new_row][new_col].setE_side(Side.OPEN);
+									allocated_side = Allocation.EAST;
 									break;
 								}
 								else if (Maze[new_row][new_col].getE_side() == Side.UNASSIGNED){
@@ -112,6 +115,7 @@ public class App {
 								
 								if (Maze[new_row][new_col].getS_side() == Side.UNASSIGNED && pathway == 0) {
 									Maze[new_row][new_col].setS_side(Side.OPEN);
+									allocated_side = Allocation.SOUTH;
 									break;
 								}
 								else if (Maze[new_row][new_col].getS_side() == Side.UNASSIGNED){
@@ -121,6 +125,7 @@ public class App {
 								
 								if (Maze[new_row][new_col].getW_side() == Side.UNASSIGNED && pathway == 0) {
 									Maze[new_row][new_col].setW_side(Side.OPEN);
+									allocated_side = Allocation.WEST;
 									break;
 								}
 								else if (Maze[new_row][new_col].getW_side() == Side.UNASSIGNED){
@@ -144,6 +149,25 @@ public class App {
 									Maze[new_row][new_col].setW_side(Side.CLOSED);
 								}
 							}
+							
+							// Reference new block
+							switch (allocated_side) {
+							case NORTH:
+								new_row = new_row - 1;
+								break;
+							case SOUTH:
+								new_row = new_row + 1;
+								break;
+							case EAST:
+								new_col = new_col + 1;
+								break;
+							case WEST:
+								new_col = new_col - 1;
+								break;
+							default:
+								// dead end so no allocation
+								break;
+							};
 						}
 						// else flag dead_end and break
 						else {
@@ -169,10 +193,11 @@ public class App {
 		/*
 		 * Error check
 		 */
-		System.out.println(Maze[0][0].getN_side() + " | " + Maze[0][0].getE_side() + " | " + Maze[0][0].getS_side() + " | " + Maze[0][0].getW_side());
-		System.out.println(Maze[0][1].getN_side() + " | " + Maze[0][1].getE_side() + " | " + Maze[0][1].getS_side() + " | " + Maze[0][1].getW_side());
-		System.out.println(Maze[0][2].getN_side() + " | " + Maze[0][2].getE_side() + " | " + Maze[0][2].getS_side() + " | " + Maze[0][2].getW_side());
-		// System.out.println(Maze[0][3].getN_side() + " | " + Maze[0][3].getE_side() + " | " + Maze[0][3].getS_side() + " | " + Maze[0][3].getW_side());
-		
+		for (int block_row = 0; block_row < size; block_row++) {
+			System.out.println();
+			for (int block_col = 0; block_col < size; block_col++) {
+				System.out.println(Maze[block_row][block_col].getNumber() + " : " + Maze[block_row][block_col].getN_side() + " | " + Maze[block_row][block_col].getE_side() + " | " + Maze[block_row][block_col].getS_side() + " | " + Maze[block_row][block_col].getW_side());
+			}
+		}
 	}
 }
