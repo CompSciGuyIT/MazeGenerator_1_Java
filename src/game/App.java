@@ -4,7 +4,7 @@ import java.util.Random;
 
 public class App {
 
-	public static int size = 5;
+	public static int size = 3;
 	public static int num_spaces = size * size;
 	public static boolean dead_end;
 	
@@ -32,7 +32,7 @@ public class App {
 				for (int block_col = 0; block_col < size; block_col++) {
 				
 					// check if current block is vacant
-					if (Maze[block_row][block_col].isVacant()) {
+					while (Maze[block_row][block_col].isVacant()) {
 						
 						// setVacant to false and decrement number of spaces in maze
 						Maze[block_row][block_col].setVacant(false);
@@ -92,7 +92,7 @@ public class App {
 									Maze[block_row][block_col].setN_side(Side.OPEN);
 									break;
 								}
-								else {
+								else if (Maze[block_row][block_col].getN_side() == Side.UNASSIGNED){
 									Maze[block_row][block_col].setN_side(Side.CLOSED);
 									pathway--;
 								}
@@ -101,7 +101,7 @@ public class App {
 									Maze[block_row][block_col].setE_side(Side.OPEN);
 									break;
 								}
-								else {
+								else if (Maze[block_row][block_col].getE_side() == Side.UNASSIGNED){
 									Maze[block_row][block_col].setN_side(Side.CLOSED);
 									pathway--;
 								}
@@ -110,7 +110,7 @@ public class App {
 									Maze[block_row][block_col].setS_side(Side.OPEN);
 									break;
 								}
-								else {
+								else if (Maze[block_row][block_col].getS_side() == Side.UNASSIGNED){
 									Maze[block_row][block_col].setN_side(Side.CLOSED);
 									pathway--;
 								}
@@ -119,7 +119,7 @@ public class App {
 									Maze[block_row][block_col].setW_side(Side.OPEN);
 									break;
 								}
-								else {
+								else if (Maze[block_row][block_col].getW_side() == Side.UNASSIGNED){
 									Maze[block_row][block_col].setN_side(Side.CLOSED);
 									pathway--;
 								}
@@ -154,18 +154,21 @@ public class App {
 						// Move to next block through side that just been assigned to be open
 					}
 				}
+				/*
 				if (dead_end) {
 					break;
 				}
+				*/
 			}
 		} while (num_spaces > 0);
 		
 		/*
 		 * Error check
-		for (int block = 0; block < size; block++) {
-			
-			System.out.println(Maze[1][block].getN_side());
-		}
-		*/
+		 */
+		System.out.println(Maze[0][0].getN_side() + " | " + Maze[0][0].getE_side() + " | " + Maze[0][0].getS_side() + " | " + Maze[0][0].getW_side());
+		System.out.println(Maze[0][1].getN_side() + " | " + Maze[0][1].getE_side() + " | " + Maze[0][1].getS_side() + " | " + Maze[0][1].getW_side());
+		System.out.println(Maze[0][2].getN_side() + " | " + Maze[0][2].getE_side() + " | " + Maze[0][2].getS_side() + " | " + Maze[0][2].getW_side());
+		// System.out.println(Maze[0][3].getN_side() + " | " + Maze[0][3].getE_side() + " | " + Maze[0][3].getS_side() + " | " + Maze[0][3].getW_side());
+		
 	}
 }
