@@ -10,13 +10,14 @@ public class App {
 	
 	public static void main(String[] args) {
 
+		int blockNumber = 0;
+
+		// Generate maze with all unassigned blocks
 		Block[][] Maze = new Block[size][size];
-		int count = 0;
-		
 		for (int block_row = 0; block_row < size; block_row++) {
 			for (int block_col = 0; block_col < size; block_col++) {
-				count++;
-				Maze[block_row][block_col] = new Block(count);				
+				blockNumber++;
+				Maze[block_row][block_col] = new Block(blockNumber);				
 			}
 		}
 
