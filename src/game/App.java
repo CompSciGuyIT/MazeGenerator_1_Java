@@ -7,6 +7,7 @@ public class App {
 	public static int size = 3;
 	public static int num_spaces = size * size;
 	public static boolean dead_end = false;
+	public static boolean open_path = false;
 	
 	public static void main(String[] args) {
 
@@ -32,6 +33,12 @@ public class App {
 					// create new references for when block is not a dead end
 					int new_row = block_row;
 					int new_col = block_col;
+
+					// reset flag
+					if (dead_end) {
+						dead_end = false;
+						open_path = true;						
+					}
 					
 					// check if current block is vacant
 					while (Maze[new_row][new_col].isVacant()) {
@@ -40,7 +47,7 @@ public class App {
 						System.out.println(Maze[new_row][new_col].getNumber());
 						
 						// if a dead end occurred, open path to new block
-						if (dead_end) {
+						if (open_path) {
 							
 							// Open side of adjacent block
 							if (new_row == 0) {
@@ -49,10 +56,9 @@ public class App {
 							else {
 								Maze[new_row - 1][new_col].setN_side(Side.OPEN);
 							}
+							
+							open_path = false;
 						}
-
-						// reset flag
-						dead_end = false;
 						
 						// setVacant to false and decrement number of spaces in maze
 						Maze[new_row][new_col].setVacant(false);
