@@ -24,7 +24,7 @@ public class App {
 		// increment through each block in the maze
 		// until all are no longer vacant
 		do {
-			// reset flag to engage a new tunnel
+			// reset flag and engage a new tunnel
 			dead_end = false;
 			
 			// begin incrementing through spaces in maze
@@ -38,12 +38,8 @@ public class App {
 						Maze[block_row][block_col].setVacant(false);
 						num_spaces--;
 						
-						/*
-						 * check if adjacent blocks are occupied or a boundary
-						 * if that side's value is set to open or closed
-						 * set same side in current block the same value
-						 * and decrement "number of sides" variable in current block
-						*/
+						// check sides of adjacent blocks and assign same value to current block's side
+						// and decrement "number of sides" variable in current block
 						
 						// check North block
 						if ((block_row == 0) || Maze[block_row - 1][block_col].getS_side() == Side.CLOSED) {
@@ -90,9 +86,7 @@ public class App {
 							Random rand = new Random();
 							int pathway = rand.nextInt(Maze[block_row][block_col].getNum_sides());
 							
-							// check each side of current block
-							// if side is unassigned and random number is equal to zero, assign side to open and break
-							// otherwise assign side to closed and decrement random number
+							// check each side of current block and assign to either open or closed.
 							for (int sides = 4; sides > 0; sides--) {
 								if (Maze[block_row][block_col].getN_side() == Side.UNASSIGNED && pathway == 0) {
 									Maze[block_row][block_col].setN_side(Side.OPEN);
@@ -131,7 +125,7 @@ public class App {
 								}
 							}
 
-							// close all unassigned sides
+							// close all unassigned sides once a side is assigned to open
 							for (int sides = 4; sides > 0; sides--) {
 								if (Maze[block_row][block_col].getN_side() == Side.UNASSIGNED) {
 									Maze[block_row][block_col].setN_side(Side.CLOSED);
