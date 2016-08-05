@@ -6,7 +6,7 @@ public class App {
 
 	public static int size = 3;
 	public static int num_spaces = size * size;
-	public static boolean dead_end;
+	public static boolean dead_end = false;
 	
 	public static void main(String[] args) {
 
@@ -24,10 +24,8 @@ public class App {
 		// increment through each block in the maze
 		// until all are no longer vacant
 		do {
-			// reset flag and engage a new tunnel
-			dead_end = false;
 			
-			// begin incrementing through spaces in maze
+			// increment through spaces in maze
 			for (int block_row = 0; block_row < size; block_row++) {
 				for (int block_col = 0; block_col < size; block_col++) {
 				
@@ -37,6 +35,24 @@ public class App {
 					
 					// check if current block is vacant
 					while (Maze[new_row][new_col].isVacant()) {
+						
+						// DEBUG: Print current block
+						System.out.println(Maze[new_row][new_col].getNumber());
+						
+						// if a dead end occurred, open path to new block
+						if (dead_end) {
+							
+							// Open side of adjacent block
+							if (new_row == 0) {
+								Maze[new_row][new_col - 1].setE_side(Side.OPEN);
+							}
+							else {
+								Maze[new_row - 1][new_col].setN_side(Side.OPEN);
+							}
+						}
+
+						// reset flag
+						dead_end = false;
 						
 						// setVacant to false and decrement number of spaces in maze
 						Maze[new_row][new_col].setVacant(false);
@@ -109,7 +125,7 @@ public class App {
 									break;
 								}
 								else if (Maze[new_row][new_col].getE_side() == Side.UNASSIGNED){
-									Maze[new_row][new_col].setN_side(Side.CLOSED);
+									Maze[new_row][new_col].setE_side(Side.CLOSED);
 									pathway--;
 								}
 								
@@ -135,19 +151,17 @@ public class App {
 							}
 
 							// close all unassigned sides once a side is assigned to open
-							for (int sides = 4; sides > 0; sides--) {
-								if (Maze[new_row][new_col].getN_side() == Side.UNASSIGNED) {
-									Maze[new_row][new_col].setN_side(Side.CLOSED);
-								}
-								if (Maze[new_row][new_col].getE_side() == Side.UNASSIGNED) {
-									Maze[new_row][new_col].setE_side(Side.CLOSED);
-								}
-								if (Maze[new_row][new_col].getS_side() == Side.UNASSIGNED) {
-									Maze[new_row][new_col].setS_side(Side.CLOSED);
-								}
-								if (Maze[new_row][new_col].getW_side() == Side.UNASSIGNED) {
-									Maze[new_row][new_col].setW_side(Side.CLOSED);
-								}
+							if (Maze[new_row][new_col].getN_side() == Side.UNASSIGNED) {
+								Maze[new_row][new_col].setN_side(Side.CLOSED);
+							}
+							if (Maze[new_row][new_col].getE_side() == Side.UNASSIGNED) {
+								Maze[new_row][new_col].setE_side(Side.CLOSED);
+							}
+							if (Maze[new_row][new_col].getS_side() == Side.UNASSIGNED) {
+								Maze[new_row][new_col].setS_side(Side.CLOSED);
+							}
+							if (Maze[new_row][new_col].getW_side() == Side.UNASSIGNED) {
+								Maze[new_row][new_col].setW_side(Side.CLOSED);
 							}
 							
 							// Reference new block
@@ -172,21 +186,20 @@ public class App {
 						// else flag dead_end and break
 						else {
 							dead_end = true;
+							
+							// DEBUG: Separate block string
+							System.out.println();
+							
 							break;
 						}
-						/*
-						 * Code breaks at the incorrect moment
-						 * it needs to go to the next space that has been opened
-						 * it should only break when all sides are assigned and only one is open 
-						 */
-						// Move to next block through side that just been assigned to be open
+					}
+					if (dead_end) {
+						break;
 					}
 				}
-				/*
 				if (dead_end) {
 					break;
 				}
-				*/
 			}
 		} while (num_spaces > 0);
 		
