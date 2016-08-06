@@ -4,7 +4,7 @@ import java.util.Random;
 
 public class App {
 
-	public static int size = 3;
+	public static int size = 10;
 	public static int num_spaces = size * size;
 	public static boolean dead_end = false;
 	public static boolean open_path = false;
@@ -49,14 +49,79 @@ public class App {
 						// if a dead end occurred, open path to new block
 						if (open_path) {
 							
-							// Open side of adjacent block
-							if (new_row == 0) {
-								Maze[new_row][new_col - 1].setE_side(Side.OPEN);
-							}
-							else {
-								Maze[new_row - 1][new_col].setN_side(Side.OPEN);
+							int possible_paths = 4;
+							
+							// find number of allocated blocks
+							// check North block
+							if ((new_row == 0) || Maze[new_row - 1][new_col].isVacant()) {
+								possible_paths--;
 							}
 							
+							// check South block
+							if ((new_row == size - 1) || Maze[new_row + 1][new_col].isVacant()) {
+								possible_paths--;
+							}
+							
+							// check West block
+							if ((new_col == 0) || Maze[new_row][new_col - 1].isVacant()) {
+								possible_paths--;
+							}
+							
+							// check East block
+							if (new_col == size - 1 || Maze[new_row][new_col + 1].isVacant()) {
+								possible_paths--;
+							}
+							
+							// Determine adjacent block to connect to
+							Random ran = new Random();
+							int path = ran.nextInt(possible_paths);
+							
+							// Choose random adjacent block and open adjoining sides
+
+							do {
+								// check North block
+								if (new_row == 0 || Maze[new_row - 1][new_col].isVacant() || (Maze[new_row - 1][new_col].isVacant() == false && path > 0)) {
+									path--;
+								}
+								else {
+									Maze[new_row - 1][new_col].setS_side(Side.OPEN);
+									Maze[new_row][new_col].setN_side(Side.OPEN);
+									break;
+								}
+
+								// check South block
+								if (new_row == size - 1 || Maze[new_row + 1][new_col].isVacant() || (Maze[new_row + 1][new_col].isVacant() == false && path > 0)) {
+									path--;
+								}
+								else {
+									Maze[new_row + 1][new_col].setN_side(Side.OPEN);
+									Maze[new_row][new_col].setS_side(Side.OPEN);
+									break;
+								}
+
+								// check East block
+								if (new_col == size - 1 || Maze[new_row][new_col + 1].isVacant() || (Maze[new_row + 1][new_col].isVacant() == false && path > 0)) {
+									path--;
+								}
+								else {
+									Maze[new_row][new_col + 1].setW_side(Side.OPEN);
+									Maze[new_row][new_col].setE_side(Side.OPEN);
+									break;
+								}
+
+								// check West block
+								if (new_col == 0 || Maze[new_row][new_col - 1].isVacant() || (Maze[new_row][new_col - 1].isVacant() == false && path > 0)) {
+									path--;
+								}
+								else {
+									Maze[new_row][new_col - 1].setE_side(Side.OPEN);
+									Maze[new_row][new_col].setW_side(Side.OPEN);
+									break;
+								}
+							} while (path > 0);	// this condition is irrelevant, will break as soon as path is found
+							
+						
+							// reset flag
 							open_path = false;
 						}
 						
@@ -68,7 +133,7 @@ public class App {
 						// and decrement "number of sides" variable in current block
 						
 						// check North block
-						if ((new_row == 0) || Maze[new_row - 1][new_col].getS_side() == Side.CLOSED) {
+						if (new_row == 0 || Maze[new_row - 1][new_col].getS_side() == Side.CLOSED) {
 							Maze[new_row][new_col].setN_side(Side.CLOSED);
 							Maze[new_row][new_col].setNum_sides(Maze[new_row][new_col].getNum_sides() - 1);
 						}
@@ -78,7 +143,7 @@ public class App {
 						}
 						
 						// check South block
-						if ((new_row == size - 1) || Maze[new_row + 1][new_col].getN_side() == Side.CLOSED) {
+						if (new_row == size - 1 || Maze[new_row + 1][new_col].getN_side() == Side.CLOSED) {
 							Maze[new_row][new_col].setS_side(Side.CLOSED);
 							Maze[new_row][new_col].setNum_sides(Maze[new_row][new_col].getNum_sides() - 1);
 						}
@@ -88,7 +153,7 @@ public class App {
 						}
 						
 						// check West block
-						if ((new_col == 0) || Maze[new_row][new_col - 1].getE_side() == Side.CLOSED) {
+						if (new_col == 0 || Maze[new_row][new_col - 1].getE_side() == Side.CLOSED) {
 							Maze[new_row][new_col].setW_side(Side.CLOSED);
 							Maze[new_row][new_col].setNum_sides(Maze[new_row][new_col].getNum_sides() - 1);
 						}
@@ -113,8 +178,8 @@ public class App {
 							Random rand = new Random();
 							int pathway = rand.nextInt(Maze[new_row][new_col].getNum_sides());
 							
-							// check each side of current block and assign to either open or closed.
-							for (int sides = 4; sides > 0; sides--) {
+							// check each side of current block and assign to either open or closed, until a side is assigned to open.
+							do {
 								if (Maze[new_row][new_col].getN_side() == Side.UNASSIGNED && pathway == 0) {
 									Maze[new_row][new_col].setN_side(Side.OPEN);
 									allocated_side = Allocation.NORTH;
@@ -141,7 +206,7 @@ public class App {
 									break;
 								}
 								else if (Maze[new_row][new_col].getS_side() == Side.UNASSIGNED){
-									Maze[new_row][new_col].setN_side(Side.CLOSED);
+									Maze[new_row][new_col].setS_side(Side.CLOSED);
 									pathway--;
 								}
 								
@@ -151,12 +216,12 @@ public class App {
 									break;
 								}
 								else if (Maze[new_row][new_col].getW_side() == Side.UNASSIGNED){
-									Maze[new_row][new_col].setN_side(Side.CLOSED);
+									Maze[new_row][new_col].setW_side(Side.CLOSED);
 									pathway--;
 								}
-							}
+							} while (pathway > 0);	// this condition is irrelevant, will break as soon as path is found 
 
-							// close all unassigned sides once a side is assigned to open
+							// close all remaining unassigned sides once a side is assigned to open
 							if (Maze[new_row][new_col].getN_side() == Side.UNASSIGNED) {
 								Maze[new_row][new_col].setN_side(Side.CLOSED);
 							}
