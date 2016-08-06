@@ -4,7 +4,7 @@ import java.util.Random;
 
 public class App {
 
-	public static int size = 5;
+	public static int size = 10;
 	public static int num_spaces = size * size;
 	public static boolean dead_end = false;
 	public static boolean open_path = false;
@@ -106,7 +106,7 @@ public class App {
 								}
 
 								// check East block
-								if (new_col == size - 1 || Maze[new_row][new_col + 1].isVacant() || (Maze[new_row + 1][new_col].isVacant() == false && path > 0)) {
+								if (new_col == size - 1 || Maze[new_row][new_col + 1].isVacant() || (Maze[new_row][new_col + 1].isVacant() == false && path > 0)) {
 									path--;
 								}
 								else {
@@ -271,6 +271,11 @@ public class App {
 						}
 						
 						max_length--;
+						
+						// If maximum length is exceeded we will need to open a new path
+						if (max_length == 0) {
+							open_path = true;
+						}
 					}
 					if (dead_end) {
 						break;
