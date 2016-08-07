@@ -2,19 +2,30 @@ package game;
 
 import java.util.Random;
 
+import javax.swing.SwingUtilities;
+
 public class App {
 
 	public static int size = 10;
 	public static int num_spaces = size * size;
 	public static boolean dead_end = false;
 	public static boolean open_path = false;
+
+	static int blockNumber = 0;
+	static Block[][] Maze = initialiseMaze(blockNumber);
+	
+	static String[] filenames = new String[size * size];
 	
 	public static void main(String[] args) {
 
-		int blockNumber = 0;
-
-		Block[][] Maze = initialiseMaze(blockNumber);
 		generateMaze(Maze);
+		filenameList(Maze, filenames);
+		
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				new MainFrame(size, filenames);
+			}
+		});
 	}
 
 	// increment through each block in the maze
@@ -66,6 +77,9 @@ public class App {
 							// close all remaining unassigned sides once a side is assigned to open
 							closeSides(Maze, new_row, new_col);
 							
+							// Allocate file name to new block
+							allocateFilename(Maze, new_row, new_col);
+							
 							// Reference new block
 							switch (allocated_side) {
 							case NORTH:
@@ -107,6 +121,122 @@ public class App {
 				}
 			}
 		} while (num_spaces > 0);
+	}
+
+	private static void filenameList(Block[][] Maze, String[] filenames) {		
+		for (int block_row = 0; block_row < size; block_row++) {
+			for (int block_col = 0; block_col < size; block_col++) {
+				filenames[block_row * 10 + block_col] = Maze[block_row][block_col].getBlock();				
+			}
+		}
+		
+	}
+	
+	private static void allocateFilename(Block[][] Maze, int new_row, int new_col) {
+		if (Maze[new_row][new_col].getN_side() == Side.CLOSED
+				&& Maze[new_row][new_col].getE_side() == Side.OPEN
+				&& Maze[new_row][new_col].getS_side() == Side.CLOSED
+				&& Maze[new_row][new_col].getW_side() == Side.OPEN) {
+				Maze[new_row][new_col].setBlock("/East_West.png");
+			}
+
+		if (Maze[new_row][new_col].getN_side() == Side.CLOSED
+				&& Maze[new_row][new_col].getE_side() == Side.OPEN
+				&& Maze[new_row][new_col].getS_side() == Side.CLOSED
+				&& Maze[new_row][new_col].getW_side() == Side.CLOSED) {
+				Maze[new_row][new_col].setBlock("/East.png");
+			}
+
+		if (Maze[new_row][new_col].getN_side() == Side.OPEN
+			&& Maze[new_row][new_col].getE_side() == Side.OPEN
+			&& Maze[new_row][new_col].getS_side() == Side.CLOSED
+			&& Maze[new_row][new_col].getW_side() == Side.OPEN) {
+			Maze[new_row][new_col].setBlock("/North_East_West.png");
+		}
+
+		if (Maze[new_row][new_col].getN_side() == Side.OPEN
+			&& Maze[new_row][new_col].getE_side() == Side.OPEN
+			&& Maze[new_row][new_col].getS_side() == Side.CLOSED
+			&& Maze[new_row][new_col].getW_side() == Side.CLOSED) {
+			Maze[new_row][new_col].setBlock("/North_East.png");
+		}
+
+		if (Maze[new_row][new_col].getN_side() == Side.OPEN
+			&& Maze[new_row][new_col].getE_side() == Side.OPEN
+			&& Maze[new_row][new_col].getS_side() == Side.OPEN
+			&& Maze[new_row][new_col].getW_side() == Side.OPEN) {
+			Maze[new_row][new_col].setBlock("/North_South_East_West.png");
+		}
+
+		if (Maze[new_row][new_col].getN_side() == Side.OPEN
+			&& Maze[new_row][new_col].getE_side() == Side.OPEN
+			&& Maze[new_row][new_col].getS_side() == Side.OPEN
+			&& Maze[new_row][new_col].getW_side() == Side.CLOSED) {
+			Maze[new_row][new_col].setBlock("/North_South_East.png");
+		}
+
+		if (Maze[new_row][new_col].getN_side() == Side.OPEN
+			&& Maze[new_row][new_col].getE_side() == Side.CLOSED
+			&& Maze[new_row][new_col].getS_side() == Side.OPEN
+			&& Maze[new_row][new_col].getW_side() == Side.OPEN) {
+			Maze[new_row][new_col].setBlock("/North_South_West.png");
+		}
+
+		if (Maze[new_row][new_col].getN_side() == Side.OPEN
+				&& Maze[new_row][new_col].getE_side() == Side.CLOSED
+				&& Maze[new_row][new_col].getS_side() == Side.OPEN
+				&& Maze[new_row][new_col].getW_side() == Side.CLOSED) {
+				Maze[new_row][new_col].setBlock("/North_South.png");
+			}
+
+		if (Maze[new_row][new_col].getN_side() == Side.OPEN
+			&& Maze[new_row][new_col].getE_side() == Side.CLOSED
+			&& Maze[new_row][new_col].getS_side() == Side.CLOSED
+			&& Maze[new_row][new_col].getW_side() == Side.OPEN) {
+			Maze[new_row][new_col].setBlock("/North_West.png");
+		}
+
+		if (Maze[new_row][new_col].getN_side() == Side.OPEN
+			&& Maze[new_row][new_col].getE_side() == Side.CLOSED
+			&& Maze[new_row][new_col].getS_side() == Side.CLOSED
+			&& Maze[new_row][new_col].getW_side() == Side.CLOSED) {
+			Maze[new_row][new_col].setBlock("/North.png");
+		}
+
+		if (Maze[new_row][new_col].getN_side() == Side.CLOSED
+			&& Maze[new_row][new_col].getE_side() == Side.OPEN
+			&& Maze[new_row][new_col].getS_side() == Side.OPEN
+			&& Maze[new_row][new_col].getW_side() == Side.OPEN) {
+			Maze[new_row][new_col].setBlock("/South_East_West.png");
+		}
+
+		if (Maze[new_row][new_col].getN_side() == Side.CLOSED
+			&& Maze[new_row][new_col].getE_side() == Side.OPEN
+			&& Maze[new_row][new_col].getS_side() == Side.OPEN
+			&& Maze[new_row][new_col].getW_side() == Side.CLOSED) {
+			Maze[new_row][new_col].setBlock("/South_East.png");
+		}
+
+		if (Maze[new_row][new_col].getN_side() == Side.CLOSED
+			&& Maze[new_row][new_col].getE_side() == Side.CLOSED
+			&& Maze[new_row][new_col].getS_side() == Side.OPEN
+			&& Maze[new_row][new_col].getW_side() == Side.OPEN) {
+			Maze[new_row][new_col].setBlock("/South_West.png");
+		}
+
+		if (Maze[new_row][new_col].getN_side() == Side.CLOSED
+			&& Maze[new_row][new_col].getE_side() == Side.CLOSED
+			&& Maze[new_row][new_col].getS_side() == Side.OPEN
+			&& Maze[new_row][new_col].getW_side() == Side.CLOSED) {
+			Maze[new_row][new_col].setBlock("/South.png");
+		}
+
+		if (Maze[new_row][new_col].getN_side() == Side.CLOSED
+			&& Maze[new_row][new_col].getE_side() == Side.CLOSED
+			&& Maze[new_row][new_col].getS_side() == Side.CLOSED
+			&& Maze[new_row][new_col].getW_side() == Side.OPEN) {
+			Maze[new_row][new_col].setBlock("/West.png");
+		}
 	}
 
 	private static void closeSides(Block[][] Maze, int new_row, int new_col) {

@@ -9,6 +9,7 @@ public class Block {
 	private Side e_side;
 	private Side s_side;
 	private Side w_side;
+	private String block;
 	
 	public Block (int number) {
 		this.number = number;
@@ -17,7 +18,8 @@ public class Block {
 		this.n_side = Side.UNASSIGNED;
 		this.e_side = Side.UNASSIGNED;
 		this.s_side = Side.UNASSIGNED;
-		this.w_side = Side.UNASSIGNED;		
+		this.w_side = Side.UNASSIGNED;
+		this.block = "";
 	}
 
 	public int getNumber() {
@@ -74,5 +76,13 @@ public class Block {
 
 	public void setW_side(Side w_side) {
 		this.w_side = w_side;
+	}
+
+	public String getBlock() {
+		return block;
+	}
+
+	public void setBlock(String block) {
+		this.block = block;
 	}
 }
