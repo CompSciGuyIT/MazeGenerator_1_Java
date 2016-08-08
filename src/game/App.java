@@ -77,9 +77,6 @@ public class App {
 							// close all remaining unassigned sides once a side is assigned to open
 							closeSides(Maze, new_row, new_col);
 							
-							// Allocate file name to new block
-							allocateFilename(Maze, new_row, new_col);
-							
 							// Reference new block
 							switch (allocated_side) {
 							case NORTH:
@@ -121,6 +118,14 @@ public class App {
 				}
 			}
 		} while (num_spaces > 0);
+
+		// Allocate file name to each block
+		for (int block_row = 0; block_row < size; block_row++) {
+			for (int block_col = 0; block_col < size; block_col++) {
+				
+				allocateFilename(Maze, block_row, block_col);
+			}
+		}
 	}
 
 	private static void filenameList(Block[][] Maze, String[] filenames) {		
@@ -134,18 +139,18 @@ public class App {
 	
 	private static void allocateFilename(Block[][] Maze, int new_row, int new_col) {
 		if (Maze[new_row][new_col].getN_side() == Side.CLOSED
-				&& Maze[new_row][new_col].getE_side() == Side.OPEN
-				&& Maze[new_row][new_col].getS_side() == Side.CLOSED
-				&& Maze[new_row][new_col].getW_side() == Side.OPEN) {
-				Maze[new_row][new_col].setBlock("/East_West.png");
-			}
+			&& Maze[new_row][new_col].getE_side() == Side.OPEN
+			&& Maze[new_row][new_col].getS_side() == Side.CLOSED
+			&& Maze[new_row][new_col].getW_side() == Side.OPEN) {
+			Maze[new_row][new_col].setBlock("/East_West.png");
+		}
 
 		if (Maze[new_row][new_col].getN_side() == Side.CLOSED
-				&& Maze[new_row][new_col].getE_side() == Side.OPEN
-				&& Maze[new_row][new_col].getS_side() == Side.CLOSED
-				&& Maze[new_row][new_col].getW_side() == Side.CLOSED) {
-				Maze[new_row][new_col].setBlock("/East.png");
-			}
+			&& Maze[new_row][new_col].getE_side() == Side.OPEN
+			&& Maze[new_row][new_col].getS_side() == Side.CLOSED
+			&& Maze[new_row][new_col].getW_side() == Side.CLOSED) {
+			Maze[new_row][new_col].setBlock("/East.png");
+		}
 
 		if (Maze[new_row][new_col].getN_side() == Side.OPEN
 			&& Maze[new_row][new_col].getE_side() == Side.OPEN
@@ -183,11 +188,11 @@ public class App {
 		}
 
 		if (Maze[new_row][new_col].getN_side() == Side.OPEN
-				&& Maze[new_row][new_col].getE_side() == Side.CLOSED
-				&& Maze[new_row][new_col].getS_side() == Side.OPEN
-				&& Maze[new_row][new_col].getW_side() == Side.CLOSED) {
-				Maze[new_row][new_col].setBlock("/North_South.png");
-			}
+			&& Maze[new_row][new_col].getE_side() == Side.CLOSED
+			&& Maze[new_row][new_col].getS_side() == Side.OPEN
+			&& Maze[new_row][new_col].getW_side() == Side.CLOSED) {
+			Maze[new_row][new_col].setBlock("/North_South.png");
+		}
 
 		if (Maze[new_row][new_col].getN_side() == Side.OPEN
 			&& Maze[new_row][new_col].getE_side() == Side.CLOSED
@@ -371,13 +376,13 @@ public class App {
 		int path = ran.nextInt(possible_paths);
 		
 		// Choose random adjacent block and open adjoining sides
-		path = chooseBlock(Maze, new_row, new_col, path);
+		chooseBlock(Maze, new_row, new_col, path);
 		
 		// reset flag
 		open_path = false;
 	}
 
-	private static int chooseBlock(Block[][] Maze, int new_row, int new_col, int path) {
+	private static void chooseBlock(Block[][] Maze, int new_row, int new_col, int path) {
 		do {
 			// check North block
 			if (new_row == 0 || Maze[new_row - 1][new_col].isVacant() || (Maze[new_row - 1][new_col].isVacant() == false && path > 0)) {
@@ -419,7 +424,6 @@ public class App {
 				break;
 			}
 		} while (path > 0);	// this condition is irrelevant, will break as soon as path is found
-		return path;
 	}
 
 	// Initialise maze with all unassigned blocks

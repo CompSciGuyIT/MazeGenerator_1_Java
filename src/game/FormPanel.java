@@ -20,7 +20,6 @@ public class FormPanel extends JPanel {
 			Image img = new ImageIcon(this.getClass().getResource(filenames[i])).getImage();
 			label.setIcon(new ImageIcon(img));
 			add(label);
-			System.out.println(i + ": " + filenames[i]);
 		}
 		
 		
