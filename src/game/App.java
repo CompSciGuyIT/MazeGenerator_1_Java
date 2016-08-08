@@ -6,7 +6,7 @@ import javax.swing.SwingUtilities;
 
 public class App {
 
-	public static int size = 10;
+	public static int size = 20;
 	public static int num_spaces = size * size;
 	public static boolean dead_end = false;
 	public static boolean open_path = false;
@@ -131,7 +131,7 @@ public class App {
 	private static void filenameList(Block[][] Maze, String[] filenames) {		
 		for (int block_row = 0; block_row < size; block_row++) {
 			for (int block_col = 0; block_col < size; block_col++) {
-				filenames[block_row * 10 + block_col] = Maze[block_row][block_col].getBlock();				
+				filenames[block_row * size + block_col] = Maze[block_row][block_col].getBlock();				
 			}
 		}
 		
